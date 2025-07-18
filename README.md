@@ -7,6 +7,53 @@
 
 A production-ready Model Context Protocol (MCP) server built with TypeScript from scratch. This implementation provides a robust, scalable foundation for building AI-powered applications with tool integration, resource management, and comprehensive error handling.
 
+## 🚀 Quick Start
+
+### 🐳 Docker (Recommended - No Setup Required)
+
+```bash
+# Clone and start immediately
+git clone https://github.com/ajeetraina/mcp-typescript-server.git
+cd mcp-typescript-server
+
+# Fix any Docker issues automatically
+chmod +x scripts/fix-docker.sh
+./scripts/fix-docker.sh
+
+# Start the server
+docker-compose up -d
+
+# Check status
+docker-compose ps
+docker-compose logs -f
+```
+
+### 📦 Local Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/ajeetraina/mcp-typescript-server.git
+cd mcp-typescript-server
+
+# Automated setup
+chmod +x scripts/setup.sh
+./scripts/setup.sh
+
+# Start the server
+npm start
+```
+
+### ⚡ Quick Test
+
+Once running, test the calculator tool:
+
+```bash
+# Test calculation (replace with your method of sending JSON-RPC)
+echo '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"calculate","arguments":{"expression":"(10+5)*2"}}}' | node dist/server.js
+```
+
+> **🛠️ Having Docker issues?** Check [DOCKER_TROUBLESHOOTING.md](DOCKER_TROUBLESHOOTING.md) or run `./scripts/fix-docker.sh`
+
 ## 🚀 Features
 
 - **Type-Safe Architecture**: Built with TypeScript for better developer experience and code reliability
@@ -20,7 +67,6 @@ A production-ready Model Context Protocol (MCP) server built with TypeScript fro
 
 ## 📋 Table of Contents
 
-- [Quick Start](#quick-start)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Available Tools](#available-tools)
@@ -28,39 +74,9 @@ A production-ready Model Context Protocol (MCP) server built with TypeScript fro
 - [Development](#development)
 - [Testing](#testing)
 - [API Documentation](#api-documentation)
+- [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
-
-## 🏃‍♂️ Quick Start
-
-### Using Docker (Recommended)
-
-```bash
-# Pull and run the latest image
-docker run -p 3000:3000 ajeetraina/mcp-typescript-server:latest
-
-# Or using Docker Compose
-git clone https://github.com/ajeetraina/mcp-typescript-server.git
-cd mcp-typescript-server
-docker compose up -d --build
-```
-
-### Local Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/ajeetraina/mcp-typescript-server.git
-cd mcp-typescript-server
-
-# Install dependencies
-npm install
-
-# Build the project
-npm run build
-
-# Start the server
-npm start
-```
 
 ## 📦 Installation
 
@@ -78,7 +94,7 @@ git clone https://github.com/ajeetraina/mcp-typescript-server.git
 cd mcp-typescript-server
 
 # Install dependencies
-npm ci
+npm install
 
 # Copy configuration template
 cp config.json config.local.json
@@ -93,11 +109,16 @@ npm test
 npm start
 ```
 
-### Using npm (when published)
+### Using Docker (Recommended)
 
 ```bash
-npm install -g mcp-typescript-server
-mcp-typescript-server --config ./config.json
+# Pull and run the latest image
+docker run -p 3000:3000 ajeetraina/mcp-typescript-server:latest
+
+# Or using Docker Compose
+git clone https://github.com/ajeetraina/mcp-typescript-server.git
+cd mcp-typescript-server
+docker-compose up
 ```
 
 ## ⚙️ Configuration
@@ -195,30 +216,44 @@ Supported operations:
 
 ## 🐳 Docker Usage
 
-### Basic Usage
+### Quick Start
 
 ```bash
-# Build local image
-docker build -t mcp-typescript-server .
+# Fix any Docker issues first
+./scripts/fix-docker.sh
 
-# Run container
-docker run -p 3000:3000 \
-  -v $(pwd)/data:/app/data \
-  -v $(pwd)/config.json:/app/config.json:ro \
-  mcp-typescript-server
+# Start in production mode
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the server
+docker-compose down
 ```
 
-### Docker Compose
+### Development Mode
 
 ```bash
-# Development environment
+# Start development environment with hot reload
 docker-compose --profile dev up
 
-# Production environment
-docker-compose up
+# This includes:
+# - Volume mounted source code
+# - Automatic TypeScript compilation
+# - Hot reload with nodemon
+```
 
-# Run tests
+### Testing Mode
+
+```bash
+# Run tests in container
 docker-compose --profile test up
+
+# This runs the full test suite including:
+# - Unit tests
+# - Integration tests
+# - Coverage reports
 ```
 
 ### Multi-Architecture Support
@@ -423,6 +458,76 @@ The server provides health monitoring through the `health://status.json` resourc
 }
 ```
 
+## 🛠️ Troubleshooting
+
+### Common Issues
+
+#### 1. Docker Build Fails
+
+**Issue**: Package lock file mismatch or build context issues.
+
+**Solution**:
+```bash
+# Use the automated fix
+./scripts/fix-docker.sh
+
+# Or manual fix
+git pull origin main
+rm -rf node_modules package-lock.json
+npm install
+docker-compose build --no-cache
+```
+
+#### 2. TypeScript Compilation Errors
+
+**Issue**: Type mismatches or missing dependencies.
+
+**Solution**:
+```bash
+# Pull latest fixes
+git pull origin main
+
+# Clean and rebuild
+npm run clean
+npm install
+npm run build
+```
+
+#### 3. Port Already in Use
+
+**Issue**: Port 3000 is already occupied.
+
+**Solution**:
+```bash
+# Find and kill process
+lsof -i :3000
+kill -9 <PID>
+
+# Or use different port
+PORT=3001 npm start
+```
+
+#### 4. Permission Errors
+
+**Issue**: Cannot write to data directories.
+
+**Solution**:
+```bash
+# Fix permissions
+sudo chown -R $USER:$USER data temp logs
+
+# Or recreate directories
+rm -rf data temp logs
+mkdir -p data temp logs
+```
+
+### Getting Help
+
+- **Docker Issues**: Check [DOCKER_TROUBLESHOOTING.md](DOCKER_TROUBLESHOOTING.md)
+- **Quick Start**: See [QUICKSTART.md](QUICKSTART.md)
+- **GitHub Issues**: For bug reports and feature requests
+- **GitHub Discussions**: For questions and community support
+
 ## 🚀 Deployment
 
 ### Production Deployment
@@ -533,6 +638,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Documentation**: [GitHub Wiki](https://github.com/ajeetraina/mcp-typescript-server/wiki)
 - **Issues**: [GitHub Issues](https://github.com/ajeetraina/mcp-typescript-server/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/ajeetraina/mcp-typescript-server/discussions)
+- **Docker Issues**: [DOCKER_TROUBLESHOOTING.md](DOCKER_TROUBLESHOOTING.md)
 
 ## 🙏 Acknowledgments
 
@@ -540,3 +646,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [TypeScript](https://www.typescriptlang.org/) for the amazing type system
 - All contributors who help improve this project
 
+---
+
+**Built with ❤️ by the community for AI developers everywhere.**
