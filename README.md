@@ -540,6 +540,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [TypeScript](https://www.typescriptlang.org/) for the amazing type system
 - All contributors who help improve this project
 
----
-
-**Built with ❤️ by the community for AI developers everywhere.**
