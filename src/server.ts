@@ -6,7 +6,7 @@ import {
   ListResourcesRequestSchema,
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { ToolDefinition, ToolResult, Resource, ServerCapabilities } from './types/index.js';
+import { ToolDefinition, ToolResult, Resource } from './types/index.js';
 import { CalculatorTool } from './tools/calculator.js';
 import { FileManagerTool } from './tools/fileManager.js';
 import { Logger } from './utils/logger.js';
@@ -35,7 +35,16 @@ export class MCPTypeScriptServer {
         version: this.config.get('server.version'),
       },
       {
-        capabilities: this.getServerCapabilities(),
+        capabilities: {
+          tools: {
+            listChanged: true,
+          },
+          resources: {
+            subscribe: true,
+            listChanged: true,
+          },
+          logging: {},
+        },
       }
     );
 
@@ -43,19 +52,6 @@ export class MCPTypeScriptServer {
     this.initializeTools();
     this.initializeResources();
     this.setupHandlers();
-  }
-
-  private getServerCapabilities(): ServerCapabilities {
-    return {
-      tools: {
-        listChanged: true,
-      },
-      resources: {
-        subscribe: true,
-        listChanged: true,
-      },
-      logging: {},
-    };
   }
 
   private setupMiddleware(): void {
@@ -245,8 +241,26 @@ export class MCPTypeScriptServer {
 
   public async stop(): Promise<void> {
     this.logger.info('Stopping MCP TypeScript Server...');
+    this.healthChecker.stopMonitoring();
     // Add cleanup logic here
     process.exit(0);
+  }
+
+  // Getter methods for testing
+  public getTools(): Map<string, any> {
+    return this.tools;
+  }
+
+  public getResources(): Map<string, Resource> {
+    return this.resources;
+  }
+
+  public getLogger(): Logger {
+    return this.logger;
+  }
+
+  public getHealthChecker(): HealthChecker {
+    return this.healthChecker;
   }
 }
 

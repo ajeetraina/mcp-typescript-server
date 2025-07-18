@@ -1,3 +1,4 @@
+// Update ServerCapabilities to match MCP SDK expectations
 export interface ServerCapabilities {
   tools?: {
     listChanged?: boolean;
@@ -7,6 +8,7 @@ export interface ServerCapabilities {
     listChanged?: boolean;
   };
   logging?: {};
+  [key: string]: unknown; // Add index signature for compatibility
 }
 
 export interface ToolDefinition {
