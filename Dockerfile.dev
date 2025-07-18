@@ -9,8 +9,8 @@ RUN apk add --no-cache git
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# Install all dependencies (including dev dependencies)
-RUN npm install
+# Remove lock file and install all dependencies
+RUN rm -f package-lock.json && npm install
 
 # Create data directories
 RUN mkdir -p /app/data /app/temp /app/logs

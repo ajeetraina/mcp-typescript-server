@@ -7,9 +7,8 @@ WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# Install dependencies (including dev dependencies for building)
-# Use npm install instead of npm ci to handle lock file issues
-RUN npm install
+# Install dependencies with fresh lock file
+RUN rm -f package-lock.json && npm install
 
 # Copy source code
 COPY src/ ./src/
@@ -26,9 +25,10 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install only production dependencies
-# Use npm install with --production flag instead of npm ci
-RUN npm install --production && npm cache clean --force
+# Remove lock file and install only production dependencies
+RUN rm -f package-lock.json && \
+    npm install --omit=dev && \
+    npm cache clean --force
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
