@@ -137,3 +137,20 @@ jest.config.js
 # Temporary files
 temp/
 tmp/
+
+# Lock files (will be generated in container)
+package-lock.json
+yarn.lock
+
+# Debug logs
+debug.log
+*.debug
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

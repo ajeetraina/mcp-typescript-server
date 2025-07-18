@@ -8,7 +8,8 @@ COPY package*.json ./
 COPY tsconfig.json ./
 
 # Install dependencies (including dev dependencies for building)
-RUN npm ci
+# Use npm install instead of npm ci to handle lock file issues
+RUN npm install
 
 # Copy source code
 COPY src/ ./src/
@@ -26,7 +27,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install only production dependencies
-RUN npm ci --only=production && npm cache clean --force
+# Use npm install with --production flag instead of npm ci
+RUN npm install --production && npm cache clean --force
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
