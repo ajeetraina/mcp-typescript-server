@@ -42,7 +42,7 @@ docker run -p 3000:3000 ajeetraina/mcp-typescript-server:latest
 # Or using Docker Compose
 git clone https://github.com/ajeetraina/mcp-typescript-server.git
 cd mcp-typescript-server
-docker-compose up
+docker compose up -d --build
 ```
 
 ### Local Installation
