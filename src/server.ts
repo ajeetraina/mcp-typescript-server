@@ -265,7 +265,7 @@ export class MCPTypeScriptServer {
 }
 
 // Start the server if this file is run directly
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const server = new MCPTypeScriptServer();
   
   // Handle graceful shutdown
