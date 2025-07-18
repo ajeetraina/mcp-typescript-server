@@ -1,0 +1,25 @@
+{
+  "server": {
+    "name": "typescript-mcp-server",
+    "version": "1.0.0",
+    "port": 3000
+  },
+  "logging": {
+    "level": "info",
+    "maxLogs": 1000
+  },
+  "security": {
+    "allowedPaths": ["./data", "./temp"],
+    "rateLimitRpm": 60
+  },
+  "tools": {
+    "calculator": {
+      "enabled": true,
+      "maxExpressionLength": 100
+    },
+    "fileManager": {
+      "enabled": true,
+      "allowedExtensions": [".txt", ".json", ".md", ".csv"]
+    }
+  }
+}
